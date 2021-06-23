@@ -83,7 +83,7 @@ namespace Calculadora
 
         private void btnEqual_Click(object sender, EventArgs e)
         {
-            Calculation.EqualBt(txbResult, txbOutput, btnEqual);
+            Calculation.Calculate(txbResult, txbOutput, btnEqual);
         }
 
         private void btnPlus_Click(object sender, EventArgs e)

@@ -4,7 +4,8 @@ namespace Calculadora.Entities
 {
     class NumPad_Click : Calculation
     {
-        private static string ScreenNumber { get; set; } = "0";
+        public static bool OneSign { get; set; } // usar pra não ficar escrevendo varios sinais 
+        public static string ScreenNumber { get; set; } = "0";
         private static TextBox txbPrincipal { get; set; }
         private static TextBox txbResult { get; set; }
         protected static bool ResultInScreen { get; set; }
@@ -19,45 +20,49 @@ namespace Calculadora.Entities
         public static void Write(Button btn, string outp = "")
         {
             int ver = Verification(btn);
-            FontLenght();
-            if (ver == 1)
+            FontSizeVerification();
+            if(txbPrincipal.TextLength < 19)
             {
-                if (txbPrincipal.Text == ScreenNumber)
+                if (ver == 1)
                 {
-                    txbPrincipal.Clear();
+                    if (txbPrincipal.Text == ScreenNumber)
+                    {
+                        txbPrincipal.Clear();
+                        txbPrincipal.AppendText(btn.Text);
+                    }
+                    else
+                    {
+                        txbPrincipal.AppendText(btn.Text);
+                    }
+                }
+                else if (ver == 2)
+                {
                     txbPrincipal.AppendText(btn.Text);
                 }
-                else
+                else if (ver == 3)
                 {
-                    txbPrincipal.AppendText(btn.Text);
+                    if (txbResult.TextLength == 0 && !Calc)
+                    {
+                        txbResult.AppendText(outp + btn.Text);
+                    }
+                    else
+                    {
+                        string text = txbPrincipal.Text;
+                        txbPrincipal.Clear();
+                        txbPrincipal.AppendText(outp);
+                        txbResult.AppendText(text + btn.Text);
+                        ScreenNumber = outp;
+                        ResultInScreen = true;
+                        Calc = true;
+                    }
                 }
             }
-            else if(ver == 2)
-            {
-                txbPrincipal.AppendText(btn.Text);
-            }
-            else if(ver == 3)
-            {
-                if (txbResult.TextLength == 0 && !Calc)
-                {
-                    txbResult.AppendText(outp + btn.Text);
-                }
-                else
-                {
-                    string text = txbPrincipal.Text;
-                    txbPrincipal.Clear();
-                    txbPrincipal.AppendText(outp);
-                    txbResult.AppendText(text + btn.Text);
-                    ScreenNumber = outp;
-                    ResultInScreen = true;
-                    Calc = true;
-                }
-            }
+          
         }
 
         public static void Backspace()
         {
-            FontLenght();
+            FontSizeVerification();
             if (!ResultInScreen)
             {
                 if (txbPrincipal.TextLength == 1)
@@ -77,6 +82,7 @@ namespace Calculadora.Entities
             else
             {
                 txbResult.Clear();
+                ResultInScreen = false;
             }
         }
 
@@ -86,6 +92,7 @@ namespace Calculadora.Entities
             txbResult.Clear();
             txbPrincipal.AppendText("0");
             ScreenNumber = "0";
+            FontSizeVerification();
         }
 
         public static void Calculate(Button btn)
@@ -142,15 +149,20 @@ namespace Calculadora.Entities
             }
         }
 
-        public static void FontLenght(double len = 0)
+        public static void FontSizeVerification()
         {
             if (txbPrincipal.TextLength < 13)
             {
                 txbPrincipal.Font = new System.Drawing.Font("Segoe UI", 33, System.Drawing.FontStyle.Bold);
+
+            }
+            else if(txbPrincipal.TextLength <= 15)
+            {
+                txbPrincipal.Font = new System.Drawing.Font("Segoe UI", 28, System.Drawing.FontStyle.Bold);
             }
             else
             {
-                txbPrincipal.Font = new System.Drawing.Font("Segoe UI", 25, System.Drawing.FontStyle.Bold);
+                txbPrincipal.Font = new System.Drawing.Font("Segoe UI", 22, System.Drawing.FontStyle.Bold);
             }
         }
     }

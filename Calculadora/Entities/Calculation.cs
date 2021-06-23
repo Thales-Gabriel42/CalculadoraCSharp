@@ -10,7 +10,7 @@ namespace Calculadora.Entities
         protected static string Output { get; set; }
         protected static int Operation { get; set; }
 
-        public static void EqualBt(TextBox txbResult, TextBox txbOut, Button btn)
+        public static void Calculate(TextBox txbResult, TextBox txbOut, Button btn)
         {
             var Result = 0.0;
             Num2 = txbOut.Text;
@@ -29,22 +29,23 @@ namespace Calculadora.Entities
                     Result = double.Parse(Num1) / double.Parse(Num2);
                     break;
             }
-            var res = Math.Abs(Result) - Result;
-            if (res == 0)
+            WriteResult(btn, Result);
+        }
+
+        protected static void WriteResult(Button btn, double result)
+        {
+
+            if (result.ToString().Length > 16)
             {
-                NumPad_Click.Write(btn, Result.ToString());
-            }
-            else if (res.ToString().Length > 14)
-            {
-                NumPad_Click.Write(btn, Result.ToString("F14"));
+                NumPad_Click.Write(btn, result.ToString("F16"));
+                NumPad_Click.ScreenNumber = result.ToString("F16");
             }
             else
             {
-                string len = res.ToString().Length.ToString();
-                string fLength = "F" + len;
-                NumPad_Click.Write(btn, Result.ToString(fLength));
+                NumPad_Click.Write(btn, result.ToString());
+                NumPad_Click.ScreenNumber = result.ToString();
             }
-            NumPad_Click.FontLenght();
+            NumPad_Click.FontSizeVerification();
         }
 
     }
